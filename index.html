@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación de Diseño - Plaza Digital</title>
+    
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent-color: #9900ff;
+            --bg-light: #f9f5ff;
+            --text-dark: #1a1a1a;
+            --discord-color: #5865F2;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 400;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(153, 0, 255, 0.1);
+            width: 100%;
+            max-width: 750px;
+        }
+        .page { display: none; }
+        .active { display: block; }
+        h1 { 
+            font-weight: 900; 
+            color: var(--accent-color); 
+            text-transform: uppercase;
+            margin-top: 0;
+            font-size: 2.2em;
+            line-height: 1.1;
+        }
+        h2 { font-weight: 900; color: var(--text-dark); margin-bottom: 25px; }
+        .form-group { margin-bottom: 25px; }
+        label { display: block; margin-bottom: 8px; font-weight: 400; }
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+        }
+        .question { 
+            margin-bottom: 35px; 
+            padding: 25px; 
+            background: white; 
+            border: 1px solid #f0f0f0;
+            border-left: 8px solid var(--accent-color); 
+            border-radius: 12px; 
+        }
+        .question p { font-weight: 900; margin-bottom: 15px; }
+        .options label { 
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px; 
+            cursor: pointer; 
+            padding: 10px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .options label:hover { background: var(--bg-light); }
+        .options input { margin-right: 15px; accent-color: var(--accent-color); transform: scale(1.2); }
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 900;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        #result-box { text-align: center; }
+        .score { font-size: 80px; color: var(--accent-color); font-weight: 900; margin: 20px 0 5px 0; }
+        .percentage { font-size: 24px; color: #666; font-weight: 400; margin-bottom: 25px; }
+        
+        /* Estilos para el mensaje de Discord */
+        .discord-instruction {
+            display: block;
+            font-size: 12px;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+            margin-top: 8px;
+            opacity: 0.9;
+        }
+
+        .footer-custom {
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+        .footer-social-row {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .social-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 400;
+        }
+        .footer-logo-img {
+            height: 35px;
+            width: auto;
+            display: block;
+        }
+        .insta-handle {
+            font-weight: 900;
+            color: var(--accent-color);
+        }
+        .footer-credits {
+            font-size: 11px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="page1" class="page active">
+        <h1>Test de<br>Diseño Gráfico</h1>
+        <p>Taller Plaza Digital - Moreno 2k26</p>
+        <div class="form-group">
+            <label for="nombre">Nombre y Apellido</label>
+            <input type="text" id="nombre" placeholder="Tu nombre">
+        </div>
+        <div class="form-group">
+            <label for="grupo">Grupo / Comisión</label>
+            <input type="text" id="grupo" placeholder="Nombre del grupo">
+        </div>
+        <button onclick="nextPage(2)">Iniciar Evaluación</button>
+    </div>
+
+    <div id="page2" class="page">
+        <h2>Cuestionario</h2>
+        <form id="quizForm">
+            <!-- Preguntas -->
+            <div class="question"><p>1. ¿Cuál es el origen etimológico de la palabra "Diseño"?</p>
+                <div class="options"><label><input type="radio" name="q1" value="0"> Del griego "Graphos" (escritura).</label><label><input type="radio" name="q1" value="1"> Del italiano "Disegno" (dibujo e idea) y latín "Designare".</label><label><input type="radio" name="q1" value="0"> Del francés "Dessiner" (colorear).</label></div></div>
+            
+            <div class="question"><p>2. Según el material, diseñar consiste principalmente en:</p>
+                <div class="options"><label><input type="radio" name="q2" value="0"> Crear piezas artísticas para museos.</label><label><input type="radio" name="q2" value="1"> Planificar y resolver visualmente una necesidad o problema.</label><label><input type="radio" name="q2" value="0"> Hacer que un producto se vea "lindo" sin importar su función.</label></div></div>
+
+            <div class="question"><p>3. ¿Qué movimiento artístico de 1919 fue clave para el diseño gráfico contemporáneo?</p>
+                <div class="options"><label><input type="radio" name="q3" value="0"> Renacimiento.</label><label><input type="radio" name="q3" value="1"> Bauhaus.</label><label><input type="radio" name="q3" value="0"> Pop Art.</label></div></div>
+
+            <div class="question"><p>4. ¿Cuál es la principal diferencia entre Arte y Diseño?</p>
+                <div class="options"><label><input type="radio" name="q4" value="0"> El arte usa colores y el diseño solo texto.</label><label><input type="radio" name="q4" value="1"> El arte busca expresar subjetividad, mientras que el diseño busca solucionar problemas con propósito.</label><label><input type="radio" name="q4" value="0"> No existe diferencia alguna.</label></div></div>
+
+            <div class="question"><p>5. ¿Qué característica define a las imágenes vectoriales?</p>
+                <div class="options"><label><input type="radio" name="q5" value="1"> Son escalables sin perder calidad porque se basan en fórmulas matemáticas.</label><label><input type="radio" name="q5" value="0"> Están compuestas por píxeles individuales con color fijo.</label><label><input type="radio" name="q5" value="0"> Son ideales únicamente para fotografías detalladas.</label></div></div>
+
+            <div class="question"><p>6. ¿Cuál de las siguientes extensiones corresponde a un Mapa de Bits?</p>
+                <div class="options"><label><input type="radio" name="q6" value="0"> .AI</label><label><input type="radio" name="q6" value="1"> .JPG</label><label><input type="radio" name="q6" value="0"> .SVG</label></div></div>
+
+            <div class="question"><p>7. ¿Qué es el Branding?</p>
+                <div class="options"><label><input type="radio" name="q7" value="0"> Es solo el diseño del logotipo.</label><label><input type="radio" name="q7" value="1"> El proceso de crear, construir y gestionar una marca.</label><label><input type="radio" name="q7" value="0"> La impresión de folletos publicitarios.</label></div></div>
+
+            <div class="question"><p>8. ¿Cuál es la función principal de un "Brief" en diseño?</p>
+                <div class="options"><label><input type="radio" name="q8" value="0"> Servir como contrato legal de pago.</label><label><input type="radio" name="q8" value="1"> Actuar como un mapa estratégico con información para iniciar un proyecto.</label><label><input type="radio" name="q8" value="0"> Es el archivo final que se envía a la imprenta.</label></div></div>
+
+            <div class="question"><p>9. En branding, ¿qué son los Arquetipos de Marca?</p>
+                <div class="options"><label><input type="radio" name="q9" value="0"> Tipos de letras antiguas.</label><label><input type="radio" name="q9" value="1"> Modelos universales de personalidad que representan deseos y valores humanos.</label><label><input type="radio" name="q9" value="0"> Formas geométricas básicas usadas en logos.</label></div></div>
+
+            <div class="question"><p>10. ¿Para qué sirve un Moodboard?</p>
+                <div class="options"><label><input type="radio" name="q10" value="0"> Para registrar legalmente el nombre de una empresa.</label><label><input type="radio" name="q10" value="1"> Para explorar la atmósfera visual y conceptual de un proyecto mediante un collage.</label><label><input type="radio" name="q10" value="0"> Para calcular el presupuesto de una campaña.</label></div></div>
+
+            <div class="question"><p>11. El "Espacio Negativo" en una composición es:</p>
+                <div class="options"><label><input type="radio" name="q11" value="0"> El área donde se encuentra el objeto principal.</label><label><input type="radio" name="q11" value="1"> El área que queda entre los elementos, permitiendo que el diseño "respire".</label><label><input type="radio" name="q11" value="0"> Un error de impresión que debe evitarse.</label></div></div>
+
+            <div class="question"><p>12. La diferencia entre Caligrafía y Tipografía es que la Tipografía:</p>
+                <div class="options"><label><input type="radio" name="q12" value="0"> Se escribe siempre a mano con pluma.</label><label><input type="radio" name="q12" value="1"> Es un sistema reproducible y digitalizable de caracteres.</label><label><input type="radio" name="q12" value="0"> No tiene reglas estéticas.</label></div></div>
+
+            <div class="question"><p>13. ¿Qué caracteriza a las tipografías "Serif"?</p>
+                <div class="options"><label><input type="radio" name="q13" value="1"> Tienen remates o adornos en los extremos de sus trazos.</label><label><input type="radio" name="q13" value="0"> Tienen una total ausencia de remates.</label><label><input type="radio" name="q13" value="0"> Siempre imitan la escritura manual.</label></div></div>
+
+            <div class="question"><p>14. El ajuste del espacio entre dos letras específicas se llama:</p>
+                <div class="options"><label><input type="radio" name="q14" value="0"> Tracking.</label><label><input type="radio" name="q14" value="1"> Kerning.</label><label><input type="radio" name="q14" value="0"> Leading.</label></div></div>
+
+            <div class="question"><p>15. ¿Qué modelo de color debe usarse para piezas digitales (pantallas)?</p>
+                <div class="options"><label><input type="radio" name="q15" value="1"> RGB.</label><label><input type="radio" name="q15" value="0"> CMYK.</label><label><input type="radio" name="q15" value="0"> Pantone.</label></div></div>
+
+            <div class="question"><p>16. ¿Qué es la Jerarquía Visual en una pieza de diseño?</p>
+                <div class="options"><label><input type="radio" name="q16" value="0"> El orden alfabético de los textos.</label><label><input type="radio" name="q16" value="1"> La organización de los elementos para guiar el ojo del espectador por importancia.</label><label><input type="radio" name="q16" value="0"> El uso de colores brillantes únicamente en el fondo.</label></div></div>
+
+            <div class="question"><p>17. En tipografía, ¿qué define a la "Variable de Peso"?</p>
+                <div class="options"><label><input type="radio" name="q17" value="0"> El tamaño de la letra medido en puntos.</label><label><input type="radio" name="q17" value="1"> La variación en el grosor del trazo (ej. Light, Regular, Bold).</label><label><input type="radio" name="q17" value="0"> El espacio entre las líneas de un párrafo.</label></div></div>
+
+            <div class="question"><p>18. En Naming, un nombre "Evocativo" es aquel que:</p>
+                <div class="options"><label><input type="radio" name="q18" value="0"> Describe literalmente el producto.</label><label><input type="radio" name="q18" value="1"> Sugiere ideas, emociones o imágenes (ej. Patagonia).</label><label><input type="radio" name="q18" value="0"> Es una sigla de un nombre largo.</label></div></div>
+
+            <div class="question"><p>19. ¿Cuál es una "Regla de Oro" para un buen nombre de marca?</p>
+                <div class="options"><label><input type="radio" name="q19" value="0"> Que sea lo más largo posible.</label><label><input type="radio" name="q19" value="1"> Que sea fácil de pronunciar, escribir y recordar.</label><label><input type="radio" name="q19" value="0"> Que solo el dueño lo entienda.</label></div></div>
+
+            <div class="question"><p>20. ¿Qué diferencia a un Isotipo de un Logotipo?</p>
+                <div class="options"><label><input type="radio" name="q20" value="0"> El Isotipo es para impresión y el Logotipo para digital.</label><label><input type="radio" name="q20" value="1"> El Isotipo es la parte simbólica (icono), mientras que el Logotipo es la palabra escrita.</label><label><input type="radio" name="q20" value="0"> No hay diferencia, son sinónimos exactos.</label></div></div>
+
+            <button type="button" onclick="calculateScore()">Finalizar y ver puntaje</button>
+        </form>
+    </div>
+
+    <div id="page3" class="page">
+        <div id="result-box">
+            <h1 id="result-title">Resultado</h1>
+            <div class="score" id="final-score">0 / 20</div>
+            <div class="percentage" id="final-percentage">Puntaje: 0%</div>
+            <p id="feedback-msg" style="font-size: 1.2em; margin-bottom: 30px;"></p>
+            
+            <div id="action-buttons"></div>
+        </div>
+    </div>
+
+    <footer class="footer-custom">
+        <div class="footer-social-row">
+            <a href="https://www.instagram.com/tallerdisenoplazadigital/" target="_blank" style="text-decoration: none; color: inherit;">
+                <div class="social-item">
+                    <img src="logo-mariano.png" alt="Logo Mariano" class="footer-logo-img">
+                    <span class="insta-handle">@tallerdisenoplazadigital</span>
+                </div>
+            </a>
+            <a href="https://www.instagram.com/plazadigitalmoreno/" target="_blank" style="text-decoration: none; color: inherit;">
+                <div class="social-item">
+                    <img src="logo-plaza.png" alt="Logo Plaza Digital" class="footer-logo-img">
+                    <span class="insta-handle">@plazadigitalmoreno</span>
+                </div>
+            </a>
+        </div>
+        <div class="footer-credits">
+            Plaza Digital Moreno | Instructor: Mariano Cabral | 2k26
+        </div>
+    </footer>
+</div>
+
+<script>
+    function nextPage(pageNum) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page' + pageNum).classList.add('active');
+        window.scrollTo(0,0);
+    }
+
+    function calculateScore() {
+        const form = document.getElementById('quizForm');
+        const formData = new FormData(form);
+        const nombre = document.getElementById('nombre').value || "Estudiante";
+        const grupo = document.getElementById('grupo').value || "General";
+        
+        let score = 0;
+        for (let value of formData.values()) { 
+            score += parseInt(value); 
+        }
+        
+        const totalQuestions = 20;
+        const percentage = Math.round((score / totalQuestions) * 100);
+        
+        const scoreDisplay = document.getElementById('final-score');
+        const percentageDisplay = document.getElementById('final-percentage');
+        const feedbackMsg = document.getElementById('feedback-msg');
+        const actionButtons = document.getElementById('action-buttons');
+        const resultTitle = document.getElementById('result-title');
+        
+        scoreDisplay.innerText = `${score} / ${totalQuestions}`;
+        percentageDisplay.innerText = `Puntaje: ${percentage}%`;
+        
+        if (percentage >= 70) {
+            resultTitle.innerText = "¡Excelente!";
+            feedbackMsg.innerHTML = `<strong>¡Felicitaciones ${nombre}!</strong><br>Has demostrado un gran dominio en el grupo <strong>${grupo}</strong>.`;
+            
+            // BOTÓN DE APROBADO CON INSTRUCCIÓN PARA DISCORD
+            actionButtons.innerHTML = `
+                <button style="background-color: var(--discord-color); cursor: default;">
+                    APROBASTE
+                    <span class="discord-instruction">Hace captura de esto y subilo a Discord, al canal "Autoevaluación"</span>
+                </button>
+            `;
+        } else {
+            resultTitle.innerText = "Sigue intentando";
+            feedbackMsg.innerText = "Casi lo logras, puedes volver a intentarlo para ajustar tus respuestas.";
+            actionButtons.innerHTML = `<button onclick="nextPage(2)" style="background-color: var(--accent-color);">Volver al cuestionario</button>`;
+        }
+        
+        nextPage(3);
+    }
+</script>
+
+</body>
+</html>
