@@ -35,6 +35,7 @@
             box-shadow: 0 15px 40px rgba(153, 0, 255, 0.1);
             width: 100%;
             max-width: 750px;
+            box-sizing: border-box;
         }
         .page { display: none; }
         .active { display: block; }
@@ -78,7 +79,7 @@
         }
         .options label:hover { background: var(--bg-light); }
         .options input { margin-right: 15px; accent-color: var(--accent-color); transform: scale(1.2); }
-        button {
+        button, .btn-link {
             background-color: var(--accent-color);
             color: white;
             border: none;
@@ -90,12 +91,15 @@
             width: 100%;
             text-transform: uppercase;
             letter-spacing: 1px;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box;
         }
         #result-box { text-align: center; }
         .score { font-size: 80px; color: var(--accent-color); font-weight: 900; margin: 20px 0 5px 0; }
         .percentage { font-size: 24px; color: #666; font-weight: 400; margin-bottom: 25px; }
         
-        /* Estilos para el mensaje de Discord */
         .discord-instruction {
             display: block;
             font-size: 12px;
@@ -141,6 +145,17 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { padding: 25px 20px; border-radius: 15px; }
+            h1 { font-size: 1.8em; }
+            .score { font-size: 60px; }
+            .question { padding: 15px; border-left-width: 5px; }
+            .footer-social-row { gap: 15px; }
+            .insta-handle { font-size: 12px; }
+        }
     </style>
 </head>
 <body>
@@ -163,7 +178,7 @@
     <div id="page2" class="page">
         <h2>Cuestionario</h2>
         <form id="quizForm">
-            <!-- Preguntas -->
+            <!-- Las 20 preguntas se mantienen igual -->
             <div class="question"><p>1. ¿Cuál es el origen etimológico de la palabra "Diseño"?</p>
                 <div class="options"><label><input type="radio" name="q1" value="0"> Del griego "Graphos" (escritura).</label><label><input type="radio" name="q1" value="1"> Del italiano "Disegno" (dibujo e idea) y latín "Designare".</label><label><input type="radio" name="q1" value="0"> Del francés "Dessiner" (colorear).</label></div></div>
             
@@ -206,7 +221,7 @@
             <div class="question"><p>14. El ajuste del espacio entre dos letras específicas se llama:</p>
                 <div class="options"><label><input type="radio" name="q14" value="0"> Tracking.</label><label><input type="radio" name="q14" value="1"> Kerning.</label><label><input type="radio" name="q14" value="0"> Leading.</label></div></div>
 
-            <div class="question"><p>15. ¿Qué modelo de color debe usarse para piezas digitales (pantallas)?</p>
+            <div class="question"><p> modèle de color debe usarse para piezas digitales (pantallas)?</p>
                 <div class="options"><label><input type="radio" name="q15" value="1"> RGB.</label><label><input type="radio" name="q15" value="0"> CMYK.</label><label><input type="radio" name="q15" value="0"> Pantone.</label></div></div>
 
             <div class="question"><p>16. ¿Qué es la Jerarquía Visual en una pieza de diseño?</p>
@@ -294,12 +309,12 @@
             resultTitle.innerText = "¡Excelente!";
             feedbackMsg.innerHTML = `<strong>¡Felicitaciones ${nombre}!</strong><br>Has demostrado un gran dominio en el grupo <strong>${grupo}</strong>.`;
             
-            // BOTÓN DE APROBADO CON INSTRUCCIÓN PARA DISCORD
+            // BOTÓN DE APROBADO CON LINK A DISCORD
             actionButtons.innerHTML = `
-                <button style="background-color: var(--discord-color); cursor: default;">
+                <a href="https://discord.gg/69YsqZj4y" target="_blank" class="btn-link" style="background-color: var(--discord-color);">
                     APROBASTE
                     <span class="discord-instruction">Hace captura de esto y subilo a Discord, al canal "Autoevaluación"</span>
-                </button>
+                </a>
             `;
         } else {
             resultTitle.innerText = "Sigue intentando";
