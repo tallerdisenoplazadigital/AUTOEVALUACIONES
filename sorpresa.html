@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorpresa - Plaza Digital</title>
+    
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent-color: #9900ff;
+            --bg-light: #f9f5ff;
+            --text-dark: #1a1a1a;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(153, 0, 255, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        h1 { 
+            font-weight: 900; 
+            color: var(--accent-color); 
+            text-transform: uppercase;
+            font-size: 3em;
+            margin: 0;
+            line-height: 1;
+        }
+        .qr-container {
+            margin: 30px 0;
+            padding: 20px;
+            background: var(--bg-light);
+            border-radius: 15px;
+            display: inline-block;
+        }
+        .qr-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        .btn-back {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 900;
+            display: block;
+            text-transform: uppercase;
+            transition: transform 0.2s;
+        }
+        .btn-back:hover { transform: scale(1.02); }
+
+        /* FOOTER REUTILIZADO */
+        .footer-custom {
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+        .footer-social-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .social-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+        }
+        .footer-logo-img { height: 30px; width: auto; }
+        .insta-handle { font-weight: 900; color: var(--accent-color); }
+        .footer-credits { font-size: 10px; color: #aaa; text-transform: uppercase; }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.2em; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>SORPRESA</h1>
+    <p>Escaneá para volver al examen principal</p>
+
+    <div class="qr-container">
+        <!-- Generador automático de QR apuntando a tu index.html -->
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://autoevaluaciones.vercel.app" alt="QR Code">
+    </div>
+
+    <a href="index.html" class="btn-back">O hacé clic acá</a>
+
+    <footer class="footer-custom">
+        <div class="footer-social-row">
+            <div class="social-item">
+                <img src="logo-mariano.png" alt="Logo" class="footer-logo-img">
+                <span class="insta-handle">@tallerdisenoplazadigital</span>
+            </div>
+            <div class="social-item">
+                <img src="logo-plaza.png" alt="Logo" class="footer-logo-img">
+                <span class="insta-handle">@plazadigitalmoreno</span>
+            </div>
+        </div>
+        <div class="footer-credits">
+            Plaza Digital Moreno | 2k26
+        </div>
+    </footer>
+</div>
+
+</body>
+</html>
