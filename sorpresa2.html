@@ -257,12 +257,39 @@
             background-color: #fdedec;
             color: var(--error-color);
         }
+        
+        /* Contenedores de resumen de puntaje */
+        .score-summary-box {
+            background: #fdfbff;
+            border: 2px dashed var(--accent-color);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 25px 0;
+        }
         .score-display {
-            font-size: 4em;
+            font-size: 4.5em;
             font-weight: 900;
             color: var(--accent-color);
-            margin: 15px 0 5px 0;
+            margin: 0;
             line-height: 1;
+        }
+        .score-label-badge {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+        .score-metrics {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            font-size: 1em;
+            color: #444;
         }
         .score-text {
             font-size: 1.1em;
@@ -368,6 +395,7 @@
             h1 { font-size: 1.8em; }
             .container { padding: 25px 20px; }
             .option-btn { padding: 12px 15px; font-size: 0.9em; }
+            .score-metrics { gap: 15px; font-size: 0.9em; }
         }
     </style>
 </head>
@@ -375,6 +403,7 @@
 
 <div class="container">
     
+    <!-- PANTALLA 1: REGISTRO DE DATOS -->
     <div id="welcome-screen" class="welcome-screen">
         <div class="header-quiz">
             <h1>Evaluación Final</h1>
@@ -388,13 +417,14 @@
                 <input type="text" id="student-name" required placeholder="Ej: Juan Pérez">
             </div>
             <div class="form-group">
-                <label for="student-group">Comisión / Turno</label>
-                <input type="text" id="student-group" required placeholder="Ej: Comisión A / Turno Noche">
+                <label for="student-group">Marca</label>
+                <input type="text" id="student-group" required placeholder="Ej: Plaza Digital">
             </div>
             <button type="submit" class="btn-start">Comenzar Evaluación</button>
         </form>
     </div>
 
+    <!-- PANTALLA 2: EL CUESTIONARIO -->
     <div id="quiz-screen">
         <div class="header-quiz">
             <h1>Evaluación de Contenidos</h1>
@@ -405,26 +435,40 @@
         </div>
 
         <div id="questions-container">
-            </div>
+            <!-- Las preguntas se cargan dinámicamente -->
+        </div>
 
         <div class="nav-actions">
             <button id="btn-next" class="btn-next" onclick="nextQuestion()">Siguiente</button>
         </div>
     </div>
 
+    <!-- PANTALLA 3: RESULTADOS -->
     <div id="results-screen" class="results-screen">
         <h1>¡Evaluación Completa!</h1>
         
+        <!-- Tarjeta identificadora para captura de pantalla -->
         <div class="student-badge">
             <div><strong>Alumno:</strong> <span id="badge-name"></span></div>
-            <div><strong>Comisión / Turno:</strong> <span id="badge-group"></span></div>
+            <div><strong>Marca:</strong> <span id="badge-group"></span></div>
             <div><strong>Fecha:</strong> <span id="badge-date"></span></div>
             <div><strong>Condición:</strong> <span id="badge-status"></span></div>
         </div>
 
-        <div class="score-display" id="score-display">0/20</div>
+        <!-- Caja de Resumen de Calificación Escala 1 a 10 -->
+        <div class="score-summary-box">
+            <div class="score-display" id="final-grade">0</div>
+            <div class="score-label-badge">Nota Final (Escala 1-10)</div>
+            
+            <div class="score-metrics">
+                <div><strong>Correctas:</strong> <span id="metric-answers">0/20</span></div>
+                <div><strong>Porcentaje:</strong> <span id="metric-percent">0%</span></div>
+            </div>
+        </div>
+
         <div class="score-text" id="score-text">Cargando devolución...</div>
 
+        <!-- Sección de Revisión de Errores -->
         <div id="review-container" class="review-section" style="display: none;">
             <h3>Revisión de respuestas incorrectas</h3>
             <div id="wrong-answers-list"></div>
@@ -433,6 +477,7 @@
         <button class="btn-restart" onclick="restartQuiz()">Volver a Inicio</button>
     </div>
 
+    <!-- Footer Institucional -->
     <footer class="footer-custom">
         <div class="footer-social-row">
             <div class="social-item">
@@ -451,7 +496,7 @@
 </div>
 
 <script>
-    // Banco de datos con las 20 preguntas elaboradas a partir de tus documentos
+    // Banco de datos con las 20 preguntas (Preguntas 5 y 6 actualizadas)
     const quizData = [
         {
             question: "De acuerdo con los conceptos de Cassisi, Chaves y Belluccia, ¿cuál es la función real de un signo marcario en el diseño de identidad?",
@@ -498,26 +543,26 @@
             feedback: "Al ser tintas directas catalogadas bajo recetas exactas premezcladas, Pantone anula las variaciones de color que producen los sistemas de impresión tradicionales."
         },
         {
-            question: "Al revisar las letras impresas en una bolsa plástica o caja de cartón corrugado con una lupa de cuentahílos, notás un ligero efecto de 'halo' (acumulación de tinta en los bordes) y contornos un tanto aplastados. ¿Qué sistema de impresión se utilizó?",
+            question: "¿Cuáles son las tres propiedades esenciales y constitutivas que nos permiten medir, describir y modificar cualquier color dentro de una composición de diseño?",
             options: [
-                "Rotograbado",
-                "Impresión Offset",
-                "Serigrafía",
-                "Flexografía"
-            ],
-            correct: 3,
-            feedback: "El efecto halo y los bordes aplastados por presión directa son las 'huellas técnicas' inconfundibles que dejan las planchas elásticas de fotopolímero en la flexografía."
-        },
-        {
-            question: "Si una pieza editorial de alta calidad muestra fotografías compuestas por una estructura limpia de puntos CMYK ordenados en patrones florales o 'rosetas', y los textos carecen de halos o dientes de sierra, estamos ante una impresión:",
-            options: [
-                "Offset",
-                "Digital por inyección",
-                "Huecograbado",
-                "Tóner Electrofotográfico"
+                "Tono, saturación y luminosidad",
+                "Síntesis aditiva, sustractiva y Pantone",
+                "Brillo, opacidad y contraste relativo",
+                "Matiz cromático, densidad y modulación del haz"
             ],
             correct: 0,
-            feedback: "La formación geométrica de tramas en roseta y los textos definidos a la perfección en papeles planos delatan inmediatamente la impresión offset tradicional."
+            feedback: "El tono (el color en sí), la saturación (su nivel de pureza o gris) y la luminosidad (qué tan claro u oscuro es) conforman las tres dimensiones analíticas fundamentales del color."
+        },
+        {
+            question: "¿Qué herramienta gráfica y conceptual organiza los colores de manera geométrica y es indispensable para que los diseñadores identifiquen relaciones ópticas y creen armonías visuales eficaces?",
+            options: [
+                "La escala de grises de control sustractivo",
+                "La pantonera",
+                "El círculo cromático",
+                "El catálogo de vectores hexadecimales"
+            ],
+            correct: 2,
+            feedback: "El círculo cromático es el mapa bidimensional por excelencia que distribuye los tonos del espectro visible, permitiendo calcular esquemas complementarios, análogos o triadas."
         },
         {
             question: "Querés lograr un contraste dinámico, vibrante y de alto impacto visual seleccionando colores diametralmente opuestos en el círculo cromático. ¿Qué tipo de armonía cromática estás aplicando?",
@@ -678,9 +723,6 @@
     let currentQuestionIndex = 0;
     let score = 0;
     let studentData = { name: '', group: '' };
-    
-    // Matriz para guardar el historial de respuestas del alumno
-    // Estructura: { questionIdx: X, selectedIdx: Y, isCorrect: true/false }
     let userAnswersLog = [];
 
     const welcomeScreenEl = document.getElementById('welcome-screen');
@@ -689,27 +731,20 @@
     const containerEl = document.getElementById('questions-container');
     const progressBarEl = document.getElementById('progress-bar');
     const btnNextEl = document.getElementById('btn-next');
-    const scoreDisplayEl = document.getElementById('score-display');
     const scoreTextEl = document.getElementById('score-text');
     const reviewContainerEl = document.getElementById('review-container');
     const wrongAnswersListEl = document.getElementById('wrong-answers-list');
 
-    // Función al enviar el formulario inicial
     function startQuiz(event) {
         event.preventDefault();
-        
         studentData.name = document.getElementById('student-name').value;
         studentData.group = document.getElementById('student-group').value;
-
         welcomeScreenEl.classList.add('hidden');
         quizScreenEl.style.display = 'block';
-        
-        // Resetear historial al iniciar
         userAnswersLog = [];
         initQuiz();
     }
 
-    // Inicializar cuestionario
     function initQuiz() {
         containerEl.innerHTML = '';
         quizData.forEach((q, qIdx) => {
@@ -737,16 +772,14 @@
         updateProgressBar();
     }
 
-    // Selección de opción
     function selectOption(qIdx, oIdx, btnSelected) {
         const card = document.getElementById(`q-card-${qIdx}`);
         const buttons = card.querySelectorAll('.option-btn');
-        const feedbackBox = document.getElementById(`feedback-${qIdx}`);
+        const feedbackBox = document.getElementById('feedback-' + qIdx);
         const isCorrect = oIdx === quizData[qIdx].correct;
 
         buttons.forEach(btn => btn.disabled = true);
 
-        // Guardar en el log de respuestas
         userAnswersLog.push({
             questionIdx: qIdx,
             selectedIdx: oIdx,
@@ -764,11 +797,9 @@
             feedbackBox.className = 'feedback-box visible incorrect';
             feedbackBox.innerHTML = `<strong>Incorrecto.</strong> ${quizData[qIdx].feedback}`;
         }
-
         btnNextEl.classList.add('visible');
     }
 
-    // Avanzar pregunta
     function nextQuestion() {
         const currentCard = document.getElementById(`q-card-${currentQuestionIndex}`);
         currentCard.classList.remove('active');
@@ -790,7 +821,6 @@
         progressBarEl.style.width = `${pct}%`;
     }
 
-    // Mostrar pantalla final de puntajes y revisión pedagógica
     function showResults() {
         quizScreenEl.style.display = 'none';
         resultsScreenEl.classList.add('active');
@@ -801,22 +831,38 @@
         const hoy = new Date();
         document.getElementById('badge-date').innerText = hoy.toLocaleDateString('es-AR') + ' - ' + hoy.toLocaleTimeString('es-AR', {hour: '2-digit', minute:'2-digit'});
 
-        const passingScore = 14; // 70% de 20
+        const totalQuestions = quizData.length;
+        const percent = Math.round((score / totalQuestions) * 100);
+        
+        document.getElementById('metric-answers').innerText = `${score}/${totalQuestions}`;
+        document.getElementById('metric-percent').innerText = `${percent}%`;
+
+        // CÁLCULO DE LA NOTA FINAL (14 correctas = 4; 20 correctas = 10)
+        let finalGrade = 1;
+        const passingScore = 14; 
+        
+        if (score < passingScore) {
+            if (score <= 4) finalGrade = 1;
+            else if (score <= 9) finalGrade = 2;
+            else finalGrade = 3;
+        } else {
+            finalGrade = 4 + (score - passingScore);
+        }
+
+        document.getElementById('final-grade').innerText = finalGrade;
+
         const badgeStatusEl = document.getElementById('badge-status');
         
         if (score >= passingScore) {
             badgeStatusEl.innerHTML = '<span class="status-pill approved">Aprobado</span>';
-            scoreTextEl.innerText = "¡Excelente! Has alcanzado el porcentaje mínimo requerido (70%). Demostrás un entendimiento sólido de los ejes teóricos analizados en el taller.";
+            scoreTextEl.innerText = `¡Felicitaciones! Alcanzaste una nota de ${finalGrade} superando el 70% requerido. Tenés un conocimiento sólido de los contenidos de Plaza Digital.`;
         } else {
             badgeStatusEl.innerHTML = '<span class="status-pill failed">No Aprobado</span>';
-            scoreTextEl.innerText = "Evaluación finalizada. No se alcanzó el 70% de respuestas correctas exigido. Te sugerimos repasar los cuadernillos teóricos de clase para fijar conceptos.";
+            scoreTextEl.innerText = `Tu nota final es ${finalGrade}. No se logró el 70% mínimo para aprobar (14 respuestas correctas). Te sugerimos repasar la teoría y volver a intentarlo.`;
         }
 
-        scoreDisplayEl.innerText = `${score}/${quizData.length}`;
-
-        // Lógica de Renderizado de Respuestas Incorrectas
         const wrongAnswers = userAnswersLog.filter(log => !log.isCorrect);
-        wrongAnswersListEl.innerHTML = ''; // Limpiar previo
+        wrongAnswersListEl.innerHTML = '';
 
         if (wrongAnswers.length > 0) {
             reviewContainerEl.style.display = 'block';
@@ -833,11 +879,10 @@
                 wrongAnswersListEl.appendChild(itemDiv);
             });
         } else {
-            reviewContainerEl.style.display = 'none'; // Impecable, cero errores
+            reviewContainerEl.style.display = 'none';
         }
     }
 
-    // Reiniciar al formulario inicial
     function restartQuiz() {
         currentQuestionIndex = 0;
         score = 0;
