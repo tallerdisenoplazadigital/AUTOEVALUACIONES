@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación - Plaza Digital</title>
+    
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent-color: #9900ff;
+            --bg-light: #f9f5ff;
+            --text-dark: #1a1a1a;
+            --success-color: #27ae60;
+            --error-color: #c0392b;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(153, 0, 255, 0.1);
+            width: 100%;
+            max-width: 650px;
+            box-sizing: border-box;
+        }
+        .header-quiz {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h1 { 
+            font-weight: 900; 
+            color: var(--accent-color); 
+            text-transform: uppercase;
+            font-size: 2.4em;
+            margin: 0;
+            line-height: 1.1;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            margin-top: 10px;
+            color: #555;
+            font-weight: 400;
+        }
+        
+        /* Pantalla de Registro */
+        .welcome-screen {
+            display: block;
+            text-align: center;
+        }
+        .welcome-screen.hidden {
+            display: none;
+        }
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1em;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        .btn-start {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .btn-start:hover { transform: scale(1.02); }
+
+        /* Pantalla del Cuestionario */
+        #quiz-screen {
+            display: none;
+        }
+        .quiz-progress {
+            background-color: #eee;
+            border-radius: 10px;
+            height: 8px;
+            width: 100%;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress-bar {
+            background-color: var(--accent-color);
+            height: 100%;
+            width: 5%;
+            transition: width 0.3s ease;
+        }
+        .question-card {
+            display: none;
+        }
+        .question-card.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .question-number {
+            font-weight: 900;
+            color: var(--accent-color);
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        .question-text {
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .option-btn {
+            background-color: var(--bg-light);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 15px 20px;
+            text-align: left;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95em;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            line-height: 1.4;
+        }
+        .option-btn:hover {
+            border-color: var(--accent-color);
+            background-color: #f3e8ff;
+        }
+        .option-btn.correct {
+            background-color: #e8f8f0;
+            border-color: var(--success-color);
+            color: var(--success-color);
+            font-weight: 700;
+        }
+        .option-btn.incorrect {
+            background-color: #fdedec;
+            border-color: var(--error-color);
+            color: var(--error-color);
+        }
+        .feedback-box {
+            display: none;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            font-size: 0.9em;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease;
+        }
+        .feedback-box.visible { display: block; }
+        .feedback-box.correct { background-color: #e8f8f0; color: #1e6b3e; border-left: 5px solid var(--success-color); }
+        .feedback-box.incorrect { background-color: #fdedec; color: #922b21; border-left: 5px solid var(--error-color); }
+        
+        .nav-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+        .btn-next {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: none;
+        }
+        .btn-next:hover { transform: scale(1.02); }
+        .btn-next.visible { display: block; }
+
+        /* Pantalla de Resultados */
+        .results-screen {
+            text-align: center;
+            display: none;
+        }
+        .results-screen.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        .student-badge {
+            background-color: var(--bg-light);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-size: 1.05em;
+            border-left: 5px solid var(--accent-color);
+            text-align: left;
+        }
+        .student-badge div {
+            margin-bottom: 5px;
+        }
+        .student-badge div:last-child {
+            margin-bottom: 0;
+        }
+        .status-pill {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+        .status-pill.approved {
+            background-color: #e8f8f0;
+            color: var(--success-color);
+        }
+        .status-pill.failed {
+            background-color: #fdedec;
+            color: var(--error-color);
+        }
+        .score-display {
+            font-size: 4em;
+            font-weight: 900;
+            color: var(--accent-color);
+            margin: 15px 0 5px 0;
+            line-height: 1;
+        }
+        .score-text {
+            font-size: 1.1em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+
+        /* Bloque de revisión pedagógica */
+        .review-section {
+            text-align: left;
+            margin: 35px 0;
+            border-top: 2px dashed #eee;
+            padding-top: 25px;
+        }
+        .review-section h3 {
+            font-weight: 900;
+            color: #333;
+            text-transform: uppercase;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+        .wrong-item {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+        .wrong-q-title {
+            font-weight: 700;
+            font-size: 1.05em;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+        .wrong-ans {
+            font-size: 0.9em;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+        }
+        .wrong-ans.user {
+            background-color: #fdedec;
+            color: #922b21;
+            border-left: 4px solid var(--error-color);
+        }
+        .wrong-ans.correct-link {
+            background-color: #e8f8f0;
+            color: #1e6b3e;
+            border-left: 4px solid var(--success-color);
+        }
+        .wrong-rationale {
+            font-size: 0.85em;
+            background: var(--bg-light);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .btn-restart {
+            background-color: #eee;
+            color: var(--text-dark);
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            display: block;
+            text-transform: uppercase;
+            transition: background 0.2s;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+        }
+        .btn-restart:hover { background-color: #ddd; }
+
+        /* FOOTER REUTILIZADO */
+        .footer-custom {
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+        .footer-social-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .social-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+        }
+        .footer-logo-img { height: 30px; width: auto; }
+        .insta-handle { font-weight: 900; color: var(--accent-color); }
+        .footer-credits { font-size: 10px; color: #aaa; text-transform: uppercase; }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8em; }
+            .container { padding: 25px 20px; }
+            .option-btn { padding: 12px 15px; font-size: 0.9em; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div id="welcome-screen" class="welcome-screen">
+        <div class="header-quiz">
+            <h1>Evaluación Final</h1>
+            <div class="subtitle">Branding, Color y Composición Visual</div>
+        </div>
+        <p style="font-size: 0.95em; color: #666; margin-bottom: 25px;">Por favor, completá tus datos antes de iniciar la autoevaluación académica.</p>
+        
+        <form id="student-form" onsubmit="startQuiz(event)">
+            <div class="form-group">
+                <label for="student-name">Nombre y Apellido</label>
+                <input type="text" id="student-name" required placeholder="Ej: Juan Pérez">
+            </div>
+            <div class="form-group">
+                <label for="student-group">Comisión / Turno</label>
+                <input type="text" id="student-group" required placeholder="Ej: Comisión A / Turno Noche">
+            </div>
+            <button type="submit" class="btn-start">Comenzar Evaluación</button>
+        </form>
+    </div>
+
+    <div id="quiz-screen">
+        <div class="header-quiz">
+            <h1>Evaluación de Contenidos</h1>
+            <div class="subtitle">Plaza Digital Moreno</div>
+            <div class="quiz-progress">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </div>
+
+        <div id="questions-container">
+            </div>
+
+        <div class="nav-actions">
+            <button id="btn-next" class="btn-next" onclick="nextQuestion()">Siguiente</button>
+        </div>
+    </div>
+
+    <div id="results-screen" class="results-screen">
+        <h1>¡Evaluación Completa!</h1>
+        
+        <div class="student-badge">
+            <div><strong>Alumno:</strong> <span id="badge-name"></span></div>
+            <div><strong>Comisión / Turno:</strong> <span id="badge-group"></span></div>
+            <div><strong>Fecha:</strong> <span id="badge-date"></span></div>
+            <div><strong>Condición:</strong> <span id="badge-status"></span></div>
+        </div>
+
+        <div class="score-display" id="score-display">0/20</div>
+        <div class="score-text" id="score-text">Cargando devolución...</div>
+
+        <div id="review-container" class="review-section" style="display: none;">
+            <h3>Revisión de respuestas incorrectas</h3>
+            <div id="wrong-answers-list"></div>
+        </div>
+
+        <button class="btn-restart" onclick="restartQuiz()">Volver a Inicio</button>
+    </div>
+
+    <footer class="footer-custom">
+        <div class="footer-social-row">
+            <div class="social-item">
+                <img src="logo-mariano.png" alt="Logo" class="footer-logo-img">
+                <span class="insta-handle">@tallerdisenoplazadigital</span>
+            </div>
+            <div class="social-item">
+                <img src="logo-plaza.png" alt="Logo" class="footer-logo-img">
+                <span class="insta-handle">@plazadigitalmoreno</span>
+            </div>
+        </div>
+        <div class="footer-credits">
+            Plaza Digital Moreno | 2k26
+        </div>
+    </footer>
+</div>
+
+<script>
+    // Banco de datos con las 20 preguntas elaboradas a partir de tus documentos
+    const quizData = [
+        {
+            question: "De acuerdo con los conceptos de Cassisi, Chaves y Belluccia, ¿cuál es la función real de un signo marcario en el diseño de identidad?",
+            options: [
+                "Funcionar como una etiqueta visual que sirva para reconocer y recordar la marca, acumulando significado con el tiempo y el uso.",
+                "Comunicar explícitamente desde el primer momento los valores, la misión y la visión abstracta de la organización.",
+                "Garantizar que el público interprete de inmediato toda la historia de la empresa sin requerir interacciones previas.",
+                "Representar de forma literal el producto o servicio exacto que la empresa comercializa en el mercado."
+            ],
+            correct: 0,
+            feedback: "El signo marcario funciona como un identificador o 'mochila vacía' (metáfora de Cassisi) que se va llenando de significado estratégico a medida que el público experimenta la marca en el tiempo."
+        },
+        {
+            question: "Al analizar la composición digital del color, ¿a qué nos referimos específicamente con el parámetro de la 'Saturación'?",
+            options: [
+                "A la identidad o cualidad pura del color en sí mismo, como por ejemplo el Rojo, Verde o Azul.",
+                "A la intensidad cromática o pureza del color, que varía desde la viveza absoluta hasta un gris apagado.",
+                "Al nivel de luminosidad que determina cuán claro (blanco) o cuán oscuro (negro) es un color específico.",
+                "Al fenómeno físico comprobado por Isaac Newton al descomponer la luz solar con un prisma."
+            ],
+            correct: 1,
+            feedback: "La saturación mide el grado de pureza o concentración de un tono determinado, definiendo qué tan vivo o grisáceo se visualiza en entornos digitales."
+        },
+        {
+            question: "Si estás diseñando una interfaz web o piezas gráficas destinadas exclusivamente a redes sociales, ¿qué modelo de color y síntesis debés emplear?",
+            options: [
+                "Modelo CMYK, sustentado en la síntesis sustractiva donde la combinación de tintas da como resultado el negro.",
+                "Sistema Pantone, utilizando tintas directas premezcladas para asegurar que el brillo de la pantalla no cambie.",
+                "Modelo RGB, basado en la síntesis aditiva donde la suma de los colores luz produce el blanco.",
+                "Modelo hexadecimal mixto optimizado únicamente para tintas flexográficas directas."
+            ],
+            correct: 2,
+            feedback: "Al diseñar para soportes de pantalla que emiten luz directa, el sistema nativo obligado es el RGB (Red, Green, Blue), regido por la síntesis aditiva."
+        },
+        {
+            question: "En branding, ¿cuál es la principal ventaja estratégica de especificar un color institucional mediante el sistema Pantone (Pantone Matching System)?",
+            options: [
+                "Garantizar consistencia y uniformidad visual absoluta en el impreso, sin importar el proveedor, máquina o país de producción.",
+                "Permitir que los colores digitales luzcan exactamente iguales en cualquier pantalla de teléfono o monitor del mercado.",
+                "Aumentar automáticamente el contraste aditivo de las imágenes fotográficas complejas de un catálogo.",
+                "Asegurar que la mezcla sustractiva tradicional de CMYK alcance la luminosidad de un valor RGB puro."
+            ],
+            correct: 0,
+            feedback: "Al ser tintas directas catalogadas bajo recetas exactas premezcladas, Pantone anula las variaciones de color que producen los sistemas de impresión tradicionales."
+        },
+        {
+            question: "Al revisar las letras impresas en una bolsa plástica o caja de cartón corrugado con una lupa de cuentahílos, notás un ligero efecto de 'halo' (acumulación de tinta en los bordes) y contornos un tanto aplastados. ¿Qué sistema de impresión se utilizó?",
+            options: [
+                "Rotograbado",
+                "Impresión Offset",
+                "Serigrafía",
+                "Flexografía"
+            ],
+            correct: 3,
+            feedback: "El efecto halo y los bordes aplastados por presión directa son las 'huellas técnicas' inconfundibles que dejan las planchas elásticas de fotopolímero en la flexografía."
+        },
+        {
+            question: "Si una pieza editorial de alta calidad muestra fotografías compuestas por una estructura limpia de puntos CMYK ordenados en patrones florales o 'rosetas', y los textos carecen de halos o dientes de sierra, estamos ante una impresión:",
+            options: [
+                "Offset",
+                "Digital por inyección",
+                "Huecograbado",
+                "Tóner Electrofotográfico"
+            ],
+            correct: 0,
+            feedback: "La formación geométrica de tramas en roseta y los textos definidos a la perfección en papeles planos delatan inmediatamente la impresión offset tradicional."
+        },
+        {
+            question: "Querés lograr un contraste dinámico, vibrante y de alto impacto visual seleccionando colores diametralmente opuestos en el círculo cromático. ¿Qué tipo de armonía cromática estás aplicando?",
+            options: [
+                "Armonía Análoga",
+                "Armonía Complementaria",
+                "Armonía Monocromática",
+                "Armonía Triádica"
+            ],
+            correct: 1,
+            feedback: "La armonía complementaria utiliza los pares opuestos directos del círculo, garantizando el grado máximo de vibración óptica y destaque."
+        },
+        {
+            question: "Para el rediseño de la identidad visual de una marca premium de lujo que busca transmitir máxima sofisticación, coherencia y un enfoque minimalista, ¿cuál esquema de color es el más adecuado?",
+            options: [
+                "Armonía Tetraédrica",
+                "Armonía Complementaria Directa sin neutros",
+                "Armonía Monocromática",
+                "Esquema cromático aditivo primario desaturado"
+            ],
+            correct: 2,
+            feedback: "Trabajar las variaciones internas de valor y luminosidad de un solo matiz (monocromía) brinda estabilidad, sobriedad y elegancia extrema."
+        },
+        {
+            question: "Al aplicar de forma práctica la Regla del 60-30-10 en un layout o página web, ¿qué función estratégica cumple el color asignado al 10%?",
+            options: [
+                "Establecer la atmósfera general y dominante del fondo para relajar la fatiga visual del espectador.",
+                "Servir de soporte intermedio aplicándose en bloques de textos secundarios y formas decorativas medianas.",
+                "Actuar como color de acento, usándose de forma dosificada en botones clave (CTA), iconos o títulos para dirigir la mirada del usuario.",
+                "Reemplazar los valores de Pantone cuando el archivo se convierte de formato sustractivo a formato aditivo."
+            ],
+            correct: 2,
+            feedback: "El 10% se reserva estrictamente para el color de acento; su uso quirúrgico y medido tiene la función de guiar al usuario hacia las llamadas a la acción (Call to Action)."
+        },
+        {
+            question: "En el desarrollo de un sistema cromático corporativo eficaz, ¿por qué es indispensable iniciar el proceso analizando la estrategia de marca antes de elegir los colores?",
+            options: [
+                "Porque el color debe comunicar deliberadamente la personalidad de la marca, conectar con el target específico y despertar las emociones deseadas.",
+                "Para asegurar que el valor hexadecimal coincida perfectamente con el ángulo óptimo de filotaxis de la auxina.",
+                "Porque permite calcular el peso exacto de las planchas flexibles que se montarán en las líneas de offset indirecto.",
+                "Para forzar a que toda marca de tecnología utilice únicamente colores complementarios divididos sobre papel opaco."
+            ],
+            correct: 0,
+            feedback: "Los colores no son decorativos; comunican de forma psicológica y delimitan el posicionamiento conceptual alineado con el público objetivo."
+        },
+        {
+            question: "Matemáticamente, ¿cómo se define la Proporción Áurea o Número de Oro (φ)?",
+            options: [
+                "Como la sumatoria directa de los primeros diez números enteros de la escala decimal árabe.",
+                "Como una relación geométrica basada en una proporción de crecimiento cuyo valor numérico constante aproximado es 1.618.",
+                "Como el ángulo exacto de 137.5° que emplean las pantallas digitales para proyectar el color puro.",
+                "Como una regla fija que inyecta belleza absoluta y automática a un diseño sin importar la destreza del creativo."
+            ],
+            correct: 1,
+            feedback: "Representado por el símbolo Phi, el número de oro es una proporción constante (~1.618) utilizada desde la antigüedad clásica para dotar de equilibrio geométrico a las obras."
+        },
+        {
+            question: "La Sucesión de Fibonacci (1, 1, 2, 3, 5, 8, 13, 21, 34, 55...) es una serie infinita donde cada número equivale a la suma de los dos anteriores. ¿Qué ocurre cuando dividimos un término de esta serie por su inmediato antecesor?",
+            options: [
+                "Se obtiene un valor variable que determina el porcentaje de pigmento negro de una tinta CMYK.",
+                "El cociente arroja siempre el número constante de 1000, correspondiente a los colores que distingue el ojo.",
+                "El resultado se aproxima de manera progresiva y asintótica al valor del número phi (1.618).",
+                "Da como resultado fijo el ángulo de refracción de Newton dentro de un prisma de cristal."
+            ],
+            correct: 2,
+            feedback: "A medida que la serie avanza hacia el infinito, la división de sus términos se estabiliza de forma asintótica aproximándose a 1.618."
+        },
+        {
+            question: "En el contexto de la botánica y la eficiencia evolutiva, ¿qué es la 'Filotaxis' y por qué se relaciona con estos principios de diseño?",
+            options: [
+                "Es la disposición natural de hojas y semillas en ángulos óptimos de 137.5° para maximizar la captación de luz y el empaquetado del espacio sin dejar huecos.",
+                "Es un mito místico que asegura que las caracolas marinas modifican su caparazón de acuerdo con el tratado de Luca Pacioli.",
+                "Es el sistema informático estandarizado encargado de traducir valores hexadecimales a muestras físicas de cartón plegadizo.",
+                "Es la técnica de composición que prohíbe el uso de grillas o layouts geométricos en logotipos de marcas globales."
+            ],
+            correct: 0,
+            feedback: "La filotaxis demuestra cómo la naturaleza adopta espirales áureas y la sucesión numérica como una respuesta práctica de optimización de espacio y supervivencia biológica."
+        },
+        {
+            question: "Durante el Renacimiento (1509), Luca Pacioli publica su influyente obra 'La Divina Proporción'. ¿Qué impacto cultural tuvo este tratado en la historia del arte y la composición?",
+            options: [
+                "Instauró el uso obligatorio del sistema de impresión en rotograbado en los talleres de pintura del norte de Europa.",
+                "Demostró científicamente que las marcas gráficas desprovistas de grillas áureas producen fatiga ocular inmediata en el público.",
+                "Adoptó la proporción áurea como un dogma estético y espiritual, asignándole motivos teológicos que transformaron la estructura del arte de la época.",
+                "Rechazó la sucesión infinita de Fibonacci argumentando que los conejos no se reproducían siguiendo patrones geométricos."
+            ],
+            correct: 2,
+            feedback: "Pacioli elevó la relación matemática a un estatus divino, influyendo directamente en los cánones estéticos renacentistas implementados por maestros como Leonardo da Vinci."
+        },
+        {
+            question: "Al configurar el layout o grillas constructivas para una marca, ¿como debe comprender el diseñador el uso de la proporción áurea?",
+            options: [
+                "Como una excelente herramienta de composición y guía visual (similar a la regla de los tercios o retículas), sin tomarla como una ley mágica u obligación ineludible.",
+                "Como una norma matemática estricta que reemplaza por completo la necesidad de investigar el target o definir la estrategia de marca.",
+                "Como una técnica exclusiva para packaging flexible que impide la reproducción de colores planos Pantone.",
+                "Como un filtro digital automatizado que elimina de forma directa los errores de halo y bordes aserrados en imprenta."
+            ],
+            correct: 0,
+            feedback: "Es una poderosa herramienta para generar orden, consistencia y tensiones estructurales armónicas, pero no sustituye en absoluto el criterio estratégico del profesional."
+        },
+        {
+            question: "Señalá cuál de las siguientes opciones describe un error común y crítico al momento de iniciar la creación de un signo marcario:",
+            options: [
+                "Considerar de antemano el comportamiento de la marca visual en reducciones mínimas o reproducciones monocromáticas.",
+                "Diseñar una propuesta puramente estética ('algo lindo') sin una base estratégica previa, o pretender sobrecargar el logo para que cuente toda la historia de la empresa.",
+                "Clasificar rigurosamente la tipología marcaria seleccionando entre logotipo, isotipo o imagotipo según las metas comerciales.",
+                "Utilizar un color de acento equivalente al 10% de la composición general siguiendo principios de legibilidad."
+            ],
+            correct: 1,
+            feedback: "Buscar la mera ornamentación estética sin objetivos o sobrecargar el identificador con metáforas complejas genera signos gráficos confusos y disfuncionales."
+        },
+        {
+            question: "Si necesitás diseñar un identificador visual corporativo donde coexistan un elemento textual y un símbolo gráfico claramente diferenciados, pero que operen juntos de manera integrada, ¿qué tipología marcaria estás desarrollando?",
+            options: [
+                "Isotipo puro",
+                "Logotipo puro",
+                "Isologo",
+                "Imagotipo"
+            ],
+            correct: 3,
+            feedback: "En el imagotipo la parte icónica y la tipográfica conviven de forma equilibrada pero conservando autonomía (se pueden desarmar y siguen identificando por separado)."
+        },
+        {
+            question: "En el método de 6 pasos sugerido para crear un signo marcario eficiente, ¿qué acción crucial se debe ejecutar inmediatamente después de entender la marca y definir su tipología?",
+            options: [
+                "Buscar parámetros visuales precisos, tales como estilos tipográficos relevantes, espesores de líneas, iconografía y variables geométricas básicas.",
+                "Lanzar directamente la campaña final en redes sociales empleando presupuestos municipales definitivos.",
+                "Imprimir miles de empaques en rotograbado industrial de alta velocidad para verificar si hay defectos de halo.",
+                "Ocultar los bocetos en blanco y negro para evitar que se evalúe el rendimiento del signo en situaciones de alto contraste."
+            ],
+            correct: 0,
+            feedback: "El tercer paso metodológico exige trazar los límites formales y conceptuales (parámetros visuales) que servirán de base antes de soltar la mano y abocarse al bocetado rápido."
+        },
+        {
+            question: "Al estudiar la naturaleza física del color, se afirma en clase que 'una banana no es amarilla'. ¿A qué fenómeno óptico responde esta aseveración?",
+            options: [
+                "A un error de calibración digital aditivo provocado al convertir un layout de Pantone Coated a Uncoated.",
+                "A que la superficie del objeto absorbe el resto del espectro cromático de la luz y refleja exclusivamente la longitud de onda correspondiente al amarillo hacia nuestros ojos.",
+                "A que el ojo humano de los alumnos solo puede decodificar mezclas sustractivas basadas en resinas serigráficas gruesas.",
+                "A que los pigmentos naturales mutan automáticamente de tonalidad dependiendo de la sucesión numérica de Fibonacci."
+            ],
+            correct: 1,
+            feedback: "Sin luz no hay color. La materia absorbe determinadas longitudes de onda del espectro luminoso y rebota otras; lo que percibimos es la luz reflejada."
+        },
+        {
+            question: "Estás evaluando el comportamiento de un logotipo aplicando el método de testeo en usos reales. ¿Cuál es el procedimiento técnico recomendado en las guías?",
+            options: [
+                "Aumentar de tamaño el archivo hasta transformarlo en una gigantografía impresa exclusivamente con tintas fluorescentes sin código único.",
+                "Modificar la tipografía original elegida por una fuente genérica de tendencia en cada pieza gráfica de las redes sociales.",
+                "Garantizar que la composición ignore por completo las grillas ortogonales y dependa exclusivamente de conjeturas estéticas infundadas.",
+                "Probar su legibilidad reduciéndolo al mínimo necesario, verificar su rendimiento como sello en blanco y negro puro, y aplicarlo sobre mockups simples y fondos fotográficos variados."
+            ],
+            correct: 3,
+            feedback: "Someter el signo marcario a condiciones límite de escala, monocromía estricta y ruidos de fondos visuales reales es el paso vital para convalidar su solidez."
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let studentData = { name: '', group: '' };
+    
+    // Matriz para guardar el historial de respuestas del alumno
+    // Estructura: { questionIdx: X, selectedIdx: Y, isCorrect: true/false }
+    let userAnswersLog = [];
+
+    const welcomeScreenEl = document.getElementById('welcome-screen');
+    const quizScreenEl = document.getElementById('quiz-screen');
+    const resultsScreenEl = document.getElementById('results-screen');
+    const containerEl = document.getElementById('questions-container');
+    const progressBarEl = document.getElementById('progress-bar');
+    const btnNextEl = document.getElementById('btn-next');
+    const scoreDisplayEl = document.getElementById('score-display');
+    const scoreTextEl = document.getElementById('score-text');
+    const reviewContainerEl = document.getElementById('review-container');
+    const wrongAnswersListEl = document.getElementById('wrong-answers-list');
+
+    // Función al enviar el formulario inicial
+    function startQuiz(event) {
+        event.preventDefault();
+        
+        studentData.name = document.getElementById('student-name').value;
+        studentData.group = document.getElementById('student-group').value;
+
+        welcomeScreenEl.classList.add('hidden');
+        quizScreenEl.style.display = 'block';
+        
+        // Resetear historial al iniciar
+        userAnswersLog = [];
+        initQuiz();
+    }
+
+    // Inicializar cuestionario
+    function initQuiz() {
+        containerEl.innerHTML = '';
+        quizData.forEach((q, qIdx) => {
+            const card = document.createElement('div');
+            card.className = `question-card ${qIdx === 0 ? 'active' : ''}`;
+            card.id = `q-card-${qIdx}`;
+
+            let optionsHTML = '';
+            q.options.forEach((opt, oIdx) => {
+                optionsHTML += `
+                    <button class="option-btn" onclick="selectOption(${qIdx}, ${oIdx}, this)">
+                        ${opt}
+                    </button>
+                `;
+            });
+
+            card.innerHTML = `
+                <div class="question-number">Pregunta ${qIdx + 1} de ${quizData.length}</div>
+                <div class="question-text">${q.question}</div>
+                <div class="options-list">${optionsHTML}</div>
+                <div class="feedback-box" id="feedback-${qIdx}"></div>
+            `;
+            containerEl.appendChild(card);
+        });
+        updateProgressBar();
+    }
+
+    // Selección de opción
+    function selectOption(qIdx, oIdx, btnSelected) {
+        const card = document.getElementById(`q-card-${qIdx}`);
+        const buttons = card.querySelectorAll('.option-btn');
+        const feedbackBox = document.getElementById(`feedback-${qIdx}`);
+        const isCorrect = oIdx === quizData[qIdx].correct;
+
+        buttons.forEach(btn => btn.disabled = true);
+
+        // Guardar en el log de respuestas
+        userAnswersLog.push({
+            questionIdx: qIdx,
+            selectedIdx: oIdx,
+            isCorrect: isCorrect
+        });
+
+        if (isCorrect) {
+            btnSelected.classList.add('correct');
+            feedbackBox.className = 'feedback-box visible correct';
+            feedbackBox.innerHTML = `<strong>¡Correcto!</strong> ${quizData[qIdx].feedback}`;
+            score++;
+        } else {
+            btnSelected.classList.add('incorrect');
+            buttons[quizData[qIdx].correct].classList.add('correct');
+            feedbackBox.className = 'feedback-box visible incorrect';
+            feedbackBox.innerHTML = `<strong>Incorrecto.</strong> ${quizData[qIdx].feedback}`;
+        }
+
+        btnNextEl.classList.add('visible');
+    }
+
+    // Avanzar pregunta
+    function nextQuestion() {
+        const currentCard = document.getElementById(`q-card-${currentQuestionIndex}`);
+        currentCard.classList.remove('active');
+        
+        currentQuestionIndex++;
+        btnNextEl.classList.remove('visible');
+
+        if (currentQuestionIndex < quizData.length) {
+            const nextCard = document.getElementById(`q-card-${currentQuestionIndex}`);
+            nextCard.classList.add('active');
+            updateProgressBar();
+        } else {
+            showResults();
+        }
+    }
+
+    function updateProgressBar() {
+        const pct = ((currentQuestionIndex + 1) / quizData.length) * 100;
+        progressBarEl.style.width = `${pct}%`;
+    }
+
+    // Mostrar pantalla final de puntajes y revisión pedagógica
+    function showResults() {
+        quizScreenEl.style.display = 'none';
+        resultsScreenEl.classList.add('active');
+        
+        document.getElementById('badge-name').innerText = studentData.name;
+        document.getElementById('badge-group').innerText = studentData.group;
+        
+        const hoy = new Date();
+        document.getElementById('badge-date').innerText = hoy.toLocaleDateString('es-AR') + ' - ' + hoy.toLocaleTimeString('es-AR', {hour: '2-digit', minute:'2-digit'});
+
+        const passingScore = 14; // 70% de 20
+        const badgeStatusEl = document.getElementById('badge-status');
+        
+        if (score >= passingScore) {
+            badgeStatusEl.innerHTML = '<span class="status-pill approved">Aprobado</span>';
+            scoreTextEl.innerText = "¡Excelente! Has alcanzado el porcentaje mínimo requerido (70%). Demostrás un entendimiento sólido de los ejes teóricos analizados en el taller.";
+        } else {
+            badgeStatusEl.innerHTML = '<span class="status-pill failed">No Aprobado</span>';
+            scoreTextEl.innerText = "Evaluación finalizada. No se alcanzó el 70% de respuestas correctas exigido. Te sugerimos repasar los cuadernillos teóricos de clase para fijar conceptos.";
+        }
+
+        scoreDisplayEl.innerText = `${score}/${quizData.length}`;
+
+        // Lógica de Renderizado de Respuestas Incorrectas
+        const wrongAnswers = userAnswersLog.filter(log => !log.isCorrect);
+        wrongAnswersListEl.innerHTML = ''; // Limpiar previo
+
+        if (wrongAnswers.length > 0) {
+            reviewContainerEl.style.display = 'block';
+            wrongAnswers.forEach(item => {
+                const qRef = quizData[item.questionIdx];
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'wrong-item';
+                itemDiv.innerHTML = `
+                    <div class="wrong-q-title">Pregunta: ${qRef.question}</div>
+                    <div class="wrong-ans user"><strong>Tu respuesta:</strong> ${qRef.options[item.selectedIdx]}</div>
+                    <div class="wrong-ans correct-link"><strong>Respuesta correcta:</strong> ${qRef.options[qRef.correct]}</div>
+                    <div class="wrong-rationale"><strong>Definición teórica:</strong> ${qRef.feedback}</div>
+                `;
+                wrongAnswersListEl.appendChild(itemDiv);
+            });
+        } else {
+            reviewContainerEl.style.display = 'none'; // Impecable, cero errores
+        }
+    }
+
+    // Reiniciar al formulario inicial
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        score = 0;
+        userAnswersLog = [];
+        document.getElementById('student-form').reset();
+        reviewContainerEl.style.display = 'none';
+        resultsScreenEl.classList.remove('active');
+        welcomeScreenEl.classList.remove('hidden');
+    }
+</script>
+
+</body>
+</html>
